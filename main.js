@@ -15,6 +15,9 @@ mongoose.connect(`mongodb+srv://rodrigolv975:${password}@cluster0.rzn78.mongodb.
     .then(()=>console.log('Conectado a la base de datos correctamente'))
     .catch(err=>console.log('Error en la base de datos: ',err))
 
+server.get('/',(req,res)=>{
+    res.status(200).send('Pagina principal')
+})
 server.get('/api',async(req,res)=>{
     try {
         const users = await User.find();
@@ -23,11 +26,9 @@ server.get('/api',async(req,res)=>{
         res.status(500).json({ error: "Error al obtener los usuarios" });
     }
 })
-server.post("/api/add", async (req, res) => {
+/* server.post("/api/add", async (req, res) => {
     try {
         const { user_id, user_name, email, password, task } = req.body;
-
-        // Crear un nuevo usuario con tareas
         const newUser = new User({
             user_id,
             user_name,
@@ -36,14 +37,14 @@ server.post("/api/add", async (req, res) => {
             task
         });
 
-        await newUser.save(); // Guardar en MongoDB
+        await newUser.save();
         res.status(201).json({ message: "Usuario agregado con éxito", user: newUser });
 
     } catch (error) {
         console.error("Error al agregar usuario:", error);
         res.status(500).json({ error: "Error interno del servidor" });
     }
-});
+}); */
 server.get('/api/data',(req,res)=>{
     res.send(exampleData)
 })
