@@ -30,8 +30,19 @@ const register = async (req, res) => {
     }
 };
 
-const login = (req, res) => {
-    res.send('Login');
+const login = async(req, res) => {
+    const {username,email,password}=req.body
+    const user=await User.findOne({user_name:username})
+    if(user){
+        const correctPassword=await user.comparePassword(password,user.password)
+        if(correctPassword){
+            res.status(200).json({correct:'Password is correct'})
+        }else{
+            res.status(400).json({error:'User or password is incorrect'})
+        }
+    }else{
+        res.status(400).json({error:'User not found'})
+    }
 };
 
 module.exports = { register, login };
