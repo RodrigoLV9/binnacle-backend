@@ -1,3 +1,4 @@
+const getUserInfo = require('../lib/getUserInfo');
 const User = require('../models/User');
 
 const register = async (req, res) => {
@@ -36,7 +37,9 @@ const login = async(req, res) => {
     if(user){
         const correctPassword=await user.comparePassword(password,user.password)
         if(correctPassword){
-            res.status(200).json({correct:'Password is correct'})
+            const accessToken=await user.createAccessToken()
+            const refreshToken=await user.createRefreshToken()
+            res.status(200).json({user:getUserInfo(user),accessToken,refreshToken})
         }else{
             res.status(400).json({error:'User or password is incorrect'})
         }
