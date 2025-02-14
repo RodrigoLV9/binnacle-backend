@@ -8,6 +8,8 @@ const authRoutes=require('./src/routes/auth.routes')
 const exampleData=require('./src/data/example')
 const User=require('./src/models/User')
 const cors=require('cors')
+const refreshTokenRoutes=require('./src/routes/refreshToken');
+const userRoutes = require('./src/routes/user.routes');
 server.use(cors());
 server.use(express.json());
 
@@ -26,29 +28,12 @@ server.get('/api',async(req,res)=>{
         res.status(500).json({ error: "Error al obtener los usuarios" });
     }
 })
-/* server.post("/api/add", async (req, res) => {
-    try {
-        const { user_id, user_name, email, password, task } = req.body;
-        const newUser = new User({
-            user_id,
-            user_name,
-            email,
-            password,
-            task
-        });
-
-        await newUser.save();
-        res.status(201).json({ message: "Usuario agregado con éxito", user: newUser });
-
-    } catch (error) {
-        console.error("Error al agregar usuario:", error);
-        res.status(500).json({ error: "Error interno del servidor" });
-    }
-}); */
 server.get('/api/data',(req,res)=>{
     res.send(exampleData)
 })
 server.use('/api',authRoutes)
+server.use('/api/refresh-token',refreshTokenRoutes)
+server.use('/api/user',userRoutes)
 server.listen(PORT,()=>{
     console.log(`Server running in port:${PORT}`)
 })

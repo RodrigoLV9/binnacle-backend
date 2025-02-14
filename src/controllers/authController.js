@@ -7,7 +7,7 @@ const register = async (req, res) => {
 
     if (!username || !email || !password) {
         res.status(400).json({
-            error: 'Faltan campos por rellenar'
+            error: 'Missing fields to fill in'
         });
         return;
     }
@@ -32,19 +32,23 @@ const register = async (req, res) => {
 };
 
 const login = async(req, res) => {
-    const {username,email,password}=req.body
+    const {username,password}=req.body
     const user=await User.findOne({user_name:username})
-    if(user){
-        const correctPassword=await user.comparePassword(password,user.password)
-        if(correctPassword){
-            const accessToken=await user.createAccessToken()
-            const refreshToken=await user.createRefreshToken()
-            res.status(200).json({user:getUserInfo(user),accessToken,refreshToken})
-        }else{
-            res.status(400).json({error:'User or password is incorrect'})
-        }
+    if(!username || !password){
+        res.status(400).json({error:'Missing fields to fill in'})
     }else{
-        res.status(400).json({error:'User not found'})
+        if(user){
+            const correctPassword=await user.comparePassword(password,user.password)
+            if(correctPassword){
+                const accessToken=await user.createAccessToken()
+                const refreshToken=await user.createRefreshToken()
+                res.status(200).json({user:getUserInfo(user),accessToken,refreshToken})
+            }else{
+                res.status(400).json({error:'User or password is incorrect'})
+            }
+        }else{
+            res.status(400).json({error:'User not found'})
+        }
     }
 };
 
