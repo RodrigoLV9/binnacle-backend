@@ -10,6 +10,8 @@ const User=require('./src/models/User')
 const cors=require('cors')
 const refreshTokenRoutes=require('./src/routes/refreshToken');
 const userRoutes = require('./src/routes/user.routes');
+const authenticate=require('./src/controllers/authenticate');
+const binnacleRoutes = require('./src/routes/binnacle.routes');
 server.use(cors());
 server.use(express.json());
 
@@ -33,7 +35,8 @@ server.get('/api/data',(req,res)=>{
 })
 server.use('/api',authRoutes)
 server.use('/api/refresh-token',refreshTokenRoutes)
-server.use('/api/user',userRoutes)
+server.use('/api/user',authenticate,userRoutes)
+server.use('/api/binnacle',authenticate,binnacleRoutes)
 server.listen(PORT,()=>{
     console.log(`Server running in port:${PORT}`)
 })
