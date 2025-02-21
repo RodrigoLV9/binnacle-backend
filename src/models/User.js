@@ -3,16 +3,11 @@ const bcrypt = require('bcrypt');
 const { generateAccessToken, generateRefreshToken } = require('../auth/GenerateTokens');
 const getUserInfo=require('../lib/getUserInfo')
 const Token=require('./token')
-const taskSchema = new mongoose.Schema({
-    id_task: String,
-    date: String,
-    description: String,
-});
+
 const UserSchema = new mongoose.Schema({
     user_name: String,
     email: String,
     password: String,
-    task: [taskSchema],
 });
 UserSchema.pre('save', function(next) {
     if (this.isModified('password') || this.isNew) {

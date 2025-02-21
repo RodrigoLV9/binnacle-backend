@@ -3,15 +3,12 @@ const User = require('../models/User');
 
 const register = async (req, res) => {
     const { username, email, password } = req.body;
-    const task = [];
-
     if (!username || !email || !password) {
         res.status(400).json({
             error: 'Missing fields to fill in'
         });
         return;
     }
-
     try {
         const user=new User()
         const exist=await user.userNameExist(username)
@@ -22,10 +19,14 @@ const register = async (req, res) => {
             user_name: username,
             email: email,
             password: password,
-            task: task
+            idUser:user._id
         });
+        const accessToken=await newUser.createAccessToken()
+        const refreshToken=await newUser.createRefreshToken()
         await newUser.save();
-        res.status(201).json({ message: "Usuario agregado con éxito", user: newUser });
+        res.status(201).json({ message: "Usuario agregado con éxito", user: getUserInfo(newUser), accessToken:accessToken,
+        refreshToken:refreshToken
+         });
     } catch (error) {
         res.status(500).json({ message: "Error al registrar el usuario", error: error.message });
     }
